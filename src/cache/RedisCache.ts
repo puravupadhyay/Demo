@@ -23,7 +23,7 @@ let redisClient;
     redisClient.on("connect", () => console.info('Connected to ElastiCache Redis'));
 
     await redisClient.connect();
-})();
+});
 
 module.exports = function () {
     return {
