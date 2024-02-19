@@ -5,7 +5,7 @@ const redisCache = require("./cache/RedisCache");
 
 const { axiosListPricesInstance } = require("./interceptors/ListPriceInterceptors");
 const app = express();
-const port = 3000;
+const port = 8080;
 
 app.get('/', async (req, res) => {
   return res.status(200).json("Welcome");
