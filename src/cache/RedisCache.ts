@@ -4,12 +4,21 @@ import { createClient } from 'redis';
 let redisClient;
 
 (async () => {
-    console.log("Connecting to Redis ...")
-    const host = 'demorediscache-ar105k.serverless.euw1.cache.amazonaws.com';
-    const port = 6379;
-    redisClient = redis.createClient({ host, port });
 
-    redisClient.on("error", (error) => console.error(`Error : ${error}`));
+    console.log("Connecting to Redis ...")
+
+    //localhost
+    //redis.createClient()
+
+    const redisURL = "redis://myrediscache-ar105k.serverless.euw1.cache.amazonaws.com:6379"
+    redisClient = redis.createClient({
+        url: redisURL
+      });
+
+      redisClient.on("error", function(error) {
+        console.error(error);
+        // I report it onto a logging service like Sentry. 
+     });
 
     redisClient.on("connect", () => console.info('Connected to ElastiCache Redis'));
 
@@ -31,4 +40,4 @@ module.exports = function () {
             await redisClient.disconnect();
         } 
     };
-}();
+};
