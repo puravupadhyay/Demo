@@ -1,0 +1,11 @@
+export const ACCESS_TOKEN_CACHE_KEY = 'ACCESS_TOKEN';
+export const API_URL = 'https://fleetacceptance.appiancloud.com';
+export const API_SECRETS_KEY = 'EV/Discovery/APPIAN/Authorisation';
+export const API_AUTH_PATH = '/suite/authorization/oauth/token';
+export const API_AUTH_ENDPOINT = `${API_URL}${API_AUTH_PATH}`;
+export const LIST_PRICE_PATH = '/suite/webapi/fleet-prices';
+export const LIST_PRICE_ENDPOINT = `${API_URL}${LIST_PRICE_PATH}`;
+export const LIST_PRICE_PRICE_TYPE_DE = 'DE-EV';
+export const LIST_PRICE_ORIGION = 'Cardex'
+export const LIST_PRICE_CACHE_KEY = 'DE-EV';
+export const REGION = 'eu-west-1';

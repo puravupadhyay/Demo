@@ -1,0 +1,31 @@
+{
+  "name": "appian-cache-poc",
+  "version": "1.0.0",
+  "description": "A POC NodeJs app to call Appian endpoint to get the pricing data and cache it.",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "lint": "eslint . --ext .ts",
+    "build": "tsc --build",
+    "dev": "yarn build && node ./dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Purav Upadhyay",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.515.0",
+    "axios": "^1.6.7",
+    "express": "^4.18.2",
+    "moment": "^2.30.1",
+    "node-cache": "^5.1.2",
+    "redis": "^4.6.13"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.17",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}
