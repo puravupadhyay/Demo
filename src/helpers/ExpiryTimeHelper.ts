@@ -8,6 +8,6 @@ module.exports = function () {
     return {
         startDate: function () { return firstDayOfWeek.toDate(); },
         date: function () { return lastDayOfWeek.toDate() },
-        seconds: function () { return durationToLastDayOfWeek.asSeconds(); }
+        seconds: function () { return Math.round(durationToLastDayOfWeek.asSeconds()); }
     }
 }();

@@ -2,18 +2,18 @@ import axios from "axios";
 import { ACCESS_TOKEN_CACHE_KEY, LIST_PRICE_CACHE_KEY, } from "../constnats";
 const { refreshAccessToken } = require("../helpers/AuthHelper");
 const expiryTime = require("../helpers/ExpiryTimeHelper");
-const memoryCache = require("../cache/MemoryCache");
+const {getCache, setCache, hasCache, flushCacheDb} = require("./../helpers/CacheHelper");
 
 const axiosListPricesInstance = axios.create();
 
 axiosListPricesInstance.interceptors.request.use(
     async config => {
         console.log("Executing List Price Request Interceptor");
-        
-        if (!memoryCache.has(ACCESS_TOKEN_CACHE_KEY)) {
+        var tokenExists = await hasCache(ACCESS_TOKEN_CACHE_KEY);
+        if (!tokenExists) {
             await refreshAccessToken();
         }
-        const keys = memoryCache.get(ACCESS_TOKEN_CACHE_KEY)
+        const keys = await getCache(ACCESS_TOKEN_CACHE_KEY);
         config.headers["Authorization"] = `Bearer ${keys.access_token}`;
         config.headers["Accept"] = "*/*";
         return config;
@@ -25,9 +25,12 @@ axiosListPricesInstance.interceptors.request.use(
 axiosListPricesInstance.interceptors.response.use(
     async response => {
         console.log("Executing List Price Response Interceptor");
+        // console.log(response.status)
+        // console.log(response.data)
         // TODO: what to do if data.data is empty?
         console.log(`Cache will expire on: ${expiryTime.date()} or in ${expiryTime.seconds()} seconds.`)
-        memoryCache.set(LIST_PRICE_CACHE_KEY, response.data, expiryTime.seconds());
+        await setCache(LIST_PRICE_CACHE_KEY, response.data, expiryTime.seconds());
+        console.log(await hasCache(LIST_PRICE_CACHE_KEY))
         return response;
     },
     error => {

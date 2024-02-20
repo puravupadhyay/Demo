@@ -1,9 +1,9 @@
 import express from 'express';
 import { LIST_PRICE_CACHE_KEY } from './constnats';
-const memoryCache = require("./cache/MemoryCache");
-const { redisClient } = require("./cache/RedisCache");
-
+const {getCache, setCache, hasCache, flushCacheDb} = require("./helpers/CacheHelper");
+const expiryTime = require("./helpers/ExpiryTimeHelper");
 const { axiosListPricesInstance } = require("./interceptors/ListPriceInterceptors");
+
 const app = express();
 const port = 3000;
 
@@ -13,12 +13,16 @@ app.get('/', async (req, res) => {
 
 app.get('/node_cache', async (req, res) => {
   try {
-    if (!memoryCache.has(LIST_PRICE_CACHE_KEY)) {
+    var cacheExists = await hasCache(LIST_PRICE_CACHE_KEY);
+    console.log(cacheExists)
+    if (!cacheExists) {
       const url = "https://fleetacceptance.appiancloud.com/suite/webapi/fleet-prices?priceType=DE-EV&date=2024-02-05&origin=Cardex";
+      //var startDate = expiryTime.startDate();
       //const url = `${LIST_PRICE_ENDPOINT}?priceType=${LIST_PRICE_PRICE_TYPE_DE}&date=${startDate}&origin=${LIST_PRICE_ORIGION}`;
       await axiosListPricesInstance.get(url);
     }
-    const listPriceData = memoryCache.get(LIST_PRICE_CACHE_KEY);
+    const listPriceData = await getCache(LIST_PRICE_CACHE_KEY);
+    console.log(listPriceData)
     return res.status(200).json(listPriceData);
     // return res.status(200).json("Done");
   } catch ({ err }) {
@@ -29,7 +33,7 @@ app.get('/node_cache', async (req, res) => {
 
 app.get('/redis_cache_set', async (req, res) => {
   try {
-    await redisClient.set('AKey', 'A Value')
+    await setCache('AKey', 'A Value', 100)
     return res.status(200).json("Set!");
   } catch ({ err }) {
     console.error(err);
@@ -39,7 +43,17 @@ app.get('/redis_cache_set', async (req, res) => {
 
 app.get('/redis_cache_get', async (req, res) => {
   try {
-    var result = await redisClient.get('AKey')
+    const result = await getCache('AKey')
+    return res.status(200).json(result);
+  } catch ({ err }) {
+    console.error(err);
+    return res.sendStatus(500).json(err);
+  }
+});
+
+app.get('/redis_cache_has', async (req, res) => {
+  try {
+    const result = await hasCache('AKey');
     return res.status(200).json(result);
   } catch ({ err }) {
     console.error(err);
@@ -49,7 +63,7 @@ app.get('/redis_cache_get', async (req, res) => {
 
 app.get('/redis_cache_flush', async (req, res) => {
   try {
-     await redisClient.flushDb();
+    await flushCacheDb();
     return res.status(200).json("Flushed!");
   } catch ({ err }) {
     console.error(err);
