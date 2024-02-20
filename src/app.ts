@@ -39,10 +39,8 @@ app.get('/redis_cache_set', async (req, res) => {
 
 app.get('/redis_cache_get', async (req, res) => {
   try {
-    await redisClient.get("AKey").then((result) => {
+    var result = await redisClient.get("AKey");
       return res.status(200).json(result);
-    });
-
   } catch ({ err }) {
     console.error(err);
     return res.sendStatus(500).json(err);

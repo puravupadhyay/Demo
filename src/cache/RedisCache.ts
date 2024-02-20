@@ -1,4 +1,5 @@
-const Redis = require('ioredis');
+// const Redis = require('ioredis');
+const redis = require('redis');
 
 
 let redisClient;
@@ -16,10 +17,16 @@ let redisClient;
     //     port: "6379"
     // });
 
-    redisClient = new Redis({
-        port: 6379,           // Redis port
-        host: "myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com"
-    });
+    // redisClient = new Redis({
+    //     port: 6379,           // Redis port
+    //     host: "myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com"
+    // });
+
+    redisClient = redis.createClient({
+        url: 'redis://myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com:6379'
+      });
+    
+    await redisClient.connect();
 })();
 
 module.exports = { redisClient }
