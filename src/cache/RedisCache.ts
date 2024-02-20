@@ -16,7 +16,7 @@ let redisClient;
     //     port: "6379"
     // });
 
-    redisClient = createClient({
+    redisClient = redis.createClient({
         url: 'redis://myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com:6380'
       });
 
