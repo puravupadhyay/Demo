@@ -30,7 +30,6 @@ axiosListPricesInstance.interceptors.response.use(
         // TODO: what to do if data.data is empty?
         console.log(`Cache will expire on: ${expiryTime.date()} or in ${expiryTime.seconds()} seconds.`)
         await setCache(LIST_PRICE_CACHE_KEY, response.data, expiryTime.seconds());
-        console.log(await hasCache(LIST_PRICE_CACHE_KEY))
         return response;
     },
     error => {

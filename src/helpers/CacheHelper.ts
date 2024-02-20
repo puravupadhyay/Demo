@@ -35,7 +35,6 @@ async function getCache(key: string) {
 
 async function setCache(key: string, value: string, expiry: number) {
     if (process.env.USE_REDIS === 'true') {
-        console.log(JSON.stringify(value));
         await redisClient.set(key, JSON.stringify(value), {
             EX: expiry,
             NX: true
@@ -50,7 +49,6 @@ async function hasCache(key: string) {
         return await redisClient.exists(key) ? true : false;
     }
     else {
-        console.log(memoryCache.get(key))
         return memoryCache.has(key);
     }
 }

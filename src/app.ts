@@ -11,7 +11,7 @@ app.get('/', async (req, res) => {
   return res.status(200).json("Welcome");
 });
 
-app.get('/node_cache', async (req, res) => {
+app.get('/list_price', async (req, res) => {
   try {
     var cacheExists = await hasCache(LIST_PRICE_CACHE_KEY);
     console.log(cacheExists)
@@ -22,7 +22,6 @@ app.get('/node_cache', async (req, res) => {
       await axiosListPricesInstance.get(url);
     }
     const listPriceData = await getCache(LIST_PRICE_CACHE_KEY);
-    console.log(listPriceData)
     return res.status(200).json(listPriceData);
     // return res.status(200).json("Done");
   } catch ({ err }) {
