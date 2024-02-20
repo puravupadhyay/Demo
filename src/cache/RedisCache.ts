@@ -16,7 +16,7 @@ let redisClient;
     //     port: "6379"
     // });
 
-     redisClient = new Redis({
+    redisClient = new Redis({
         port: 6379,           // Redis port
         host: "myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com"
     });

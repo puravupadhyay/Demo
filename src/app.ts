@@ -29,10 +29,7 @@ app.get('/node_cache', async (req, res) => {
 
 app.get('/redis_cache_set', async (req, res) => {
   try {
-    await redisClient.set('AKey', 'A Value', {
-                      EX: 150,
-                      NX: true
-                  });
+    await redisClient.set('AKey', 'A Value')
     return res.status(200).json("Set!");
   } catch ({ err }) {
     console.error(err);
@@ -42,8 +39,10 @@ app.get('/redis_cache_set', async (req, res) => {
 
 app.get('/redis_cache_get', async (req, res) => {
   try {
-    const value = await redisClient.get('AKey');
-    return res.status(200).json(value);
+    await redisClient.get("AKey").then((result) => {
+      return res.status(200).json(result);
+    });
+
   } catch ({ err }) {
     console.error(err);
     return res.sendStatus(500).json(err);
