@@ -1,11 +1,11 @@
 import express from 'express';
 import { LIST_PRICE_CACHE_KEY } from './constnats';
 const memoryCache = require("./cache/MemoryCache");
-const redisCache = require("./cache/RedisCache");
+const { redisClient } = require("./cache/RedisCache");
 
 const { axiosListPricesInstance } = require("./interceptors/ListPriceInterceptors");
 const app = express();
-const port = 8080;
+const port = 3000;
 
 app.get('/', async (req, res) => {
   return res.status(200).json("Welcome");
@@ -27,11 +27,22 @@ app.get('/node_cache', async (req, res) => {
   }
 });
 
-app.get('/redis_cache', async (req, res) => {
+app.get('/redis_cache_set', async (req, res) => {
   try {
-    await redisCache.set('Key', 'Value', 20);
-    const value = await redisCache.get('Key');
-    redisCache.disconnect();
+    await redisClient.set('AKey', 'A Value', {
+                      EX: 150,
+                      NX: true
+                  });
+    return res.status(200).json("Set!");
+  } catch ({ err }) {
+    console.error(err);
+    return res.sendStatus(500).json(err);
+  }
+});
+
+app.get('/redis_cache_get', async (req, res) => {
+  try {
+    const value = await redisClient.get('AKey');
     return res.status(200).json(value);
   } catch ({ err }) {
     console.error(err);
