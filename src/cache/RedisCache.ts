@@ -10,11 +10,15 @@ let redisClient;
     //localhost
     //redis.createClient()
 
-    redisClient = redis.createClient({
-        host: "myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com",
-        // host: "myredisserverless-ar105k.serverless.euw1.cache.amazonaws.com",
-        port: "6379"
-    });
+    // redisClient = redis.createClient({
+    //     host: "myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com",
+    //     // host: "myredisserverless-ar105k.serverless.euw1.cache.amazonaws.com",
+    //     port: "6379"
+    // });
+
+    redisClient = createClient({
+        url: 'redis://myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com:6380'
+      });
 
     redisClient.on("error", (error) => console.error(error));
 
