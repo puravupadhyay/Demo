@@ -1,5 +1,5 @@
-const redis = require('redis');
-import { createClient } from 'redis';
+const Redis = require('ioredis');
+
 
 let redisClient;
 
@@ -16,15 +16,10 @@ let redisClient;
     //     port: "6379"
     // });
 
-    redisClient = redis.createClient({
-        url: 'redis://myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com:6380'
-      });
-
-    redisClient.on("error", (error) => console.error(error));
-
-    redisClient.on("connect", () => console.info('Connected to ElastiCache Redis'));
-
-    await redisClient.connect();
+     redisClient = new Redis({
+        port: 6379,           // Redis port
+        host: "myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com"
+    });
 })();
 
 module.exports = { redisClient }
