@@ -14,7 +14,6 @@ app.get('/', async (req, res) => {
 app.get('/list_price', async (req, res) => {
   try {
     var cacheExists = await hasCache(LIST_PRICE_CACHE_KEY);
-    console.log(cacheExists)
     if (!cacheExists) {
       const url = "https://fleetacceptance.appiancloud.com/suite/webapi/fleet-prices?priceType=DE-EV&date=2024-02-05&origin=Cardex";
       //var startDate = expiryTime.startDate();
@@ -32,7 +31,7 @@ app.get('/list_price', async (req, res) => {
 
 app.get('/redis_cache_set', async (req, res) => {
   try {
-    await setCache('AKey', 'A Value', 100)
+    await setCache(req.query.key, req.query.value, 100)
     return res.status(200).json("Set!");
   } catch ({ err }) {
     console.error(err);
@@ -42,7 +41,7 @@ app.get('/redis_cache_set', async (req, res) => {
 
 app.get('/redis_cache_get', async (req, res) => {
   try {
-    const result = await getCache('AKey')
+    const result = await getCache(req.query.key)
     return res.status(200).json(result);
   } catch ({ err }) {
     console.error(err);
@@ -52,7 +51,7 @@ app.get('/redis_cache_get', async (req, res) => {
 
 app.get('/redis_cache_has', async (req, res) => {
   try {
-    const result = await hasCache('AKey');
+    const result = await hasCache(req.query.key);
     return res.status(200).json(result);
   } catch ({ err }) {
     console.error(err);
