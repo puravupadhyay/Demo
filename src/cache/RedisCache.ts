@@ -23,7 +23,7 @@ let redisClient;
     // });
 
     redisClient = redis.createClient({
-        url: 'redis://myrediscluster.ar105k.ng.0001.euw1.cache.amazonaws.com:6379'
+        url: 'redis://myredisserverless-ar105k.serverless.euw1.cache.amazonaws.com:6379'
       });
     
     await redisClient.connect();
