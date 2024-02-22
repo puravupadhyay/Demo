@@ -25,12 +25,17 @@ axiosListPricesInstance.interceptors.request.use(
 axiosListPricesInstance.interceptors.response.use(
     async response => {
         console.log("Executing List Price Response Interceptor");
-        // console.log(response.status)
-        // console.log(response.data)
-        // TODO: what to do if data.data is empty?
+        // TODO: check data. 
+        // if data is empty 
+        // or if the service does not return a 200 
+            // then use previously cached data but set new expiry
+        // else set the new cache with new expiry  
+
         console.log(`Cache will expire on: ${expiryTime.date()} or in ${expiryTime.seconds()} seconds.`)
         await cache.set(LIST_PRICE_CACHE_KEY, response.data, expiryTime.seconds());
         return response;
+
+        // TOOD: log error status and status message
     },
     error => {
         Promise.reject(error)

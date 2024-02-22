@@ -16,9 +16,12 @@ module.exports = {
 
         await axios.post(API_AUTH_ENDPOINT, params)
             .then(async response => {
-                console.log(response.data)
-                await cache.set(ACCESS_TOKEN_CACHE_KEY, response.data, response.data.expires_in);
-                return response.data;
+                if (response.status === 200) {
+                    await cache.set(ACCESS_TOKEN_CACHE_KEY, response.data, response.data.expires_in);
+                    return response.data;
+                } else {
+                    console.error("service returned status of " + response.status + " with message: " + response.statusText);
+                }
             })
             .catch(error => {
                 throw error;
