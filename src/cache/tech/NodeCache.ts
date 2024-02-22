@@ -5,7 +5,7 @@ export function initNodeCache() {
     const memoryCache = new NodeCache();
     return {
         get: function (key: string | number) { return JSON.parse(memoryCache.get(key)) },
-        set: function (key: string | number, val: any) { memoryCache.set(key, JSON.stringify(val)) },
+        set: function (key: string | number, val: any, ttl: number) { memoryCache.set(key, JSON.stringify(val), ttl) },
         has: function (key: string): boolean { return memoryCache.has(key) },
         expired: async function (key: string) {
             if (!memoryCache.has(key))

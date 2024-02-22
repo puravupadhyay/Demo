@@ -1,6 +1,7 @@
 import axios from "axios";
-import { ACCESS_TOKEN_CACHE_KEY, LIST_PRICE_CACHE_KEY, } from "../constnats";
-import { setNewCache, updateCacheExpiry } from "../cache/CacheHelper";
+import { ACCESS_TOKEN_CACHE_KEY, } from "../constnats";
+import { cacheResponse, refreshCache } from "../cache/CacheHelper";
+import { validateData } from "../validators/ListPriceValidator";
 const { refreshAccessToken } = require("../auth/AuthHelper");
 const cache = require("../cache/Cache");
 
@@ -28,19 +29,16 @@ axiosListPricesInstance.interceptors.response.use(
         console.log("Url: " + response.config.url);
         console.log("Received a response status of " + response.status);
 
-        if (response.data.data.length == 0) {
-            console.log("Data return 0 results.");
-            await updateCacheExpiry(response.data);
-        }
-        else {
-            setNewCache(response.data);
-        }
+        validateData(response.data);
+
+        await cacheResponse(response.data);
+
         return response;
     },
     async error => {
         console.log("Url: " + error.config.url);
         console.log("Received a response status of " + error.response.status + " with response: " + JSON.stringify(error.response.data));
-        await updateCacheExpiry();
+        await refreshCache();
     });
 
 module.exports = { axiosListPricesInstance };

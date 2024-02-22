@@ -1,5 +1,4 @@
 import moment from "moment";
-
 const redis = require('redis');
 
 export function initRedisCache() {
@@ -10,7 +9,7 @@ export function initRedisCache() {
     redisClient.connect();
     return {
         get: async function (key: string | number) { return JSON.parse(await redisClient.get(key)) },
-        set: async function (key: string | number, value: any) { await redisClient.set(key, JSON.stringify(value)); },
+        set: async function (key: string | number, value: any, ttl: number) { await redisClient.set(key, JSON.stringify(value), { EX: ttl, NX: false }); },
         has: async function (key: string) { return await redisClient.exists(key) ? true : false },
         expired: async function (key: string) {
             const value = JSON.parse(await redisClient.get(key));

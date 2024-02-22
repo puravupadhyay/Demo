@@ -29,20 +29,21 @@ app.get('/list_price', async (req, res) => {
     return res.status(200).json(listPriceData);
   }
   catch (error) {
-    console.log(error)
-    return res.sendStatus(500);
+    console.log(error);
+    return res.status(500).json({
+      "error": error.message
+    });
   }
 });
 
 app.post('/set', async (req, res) => {
   try {
-    console.log(req.query.key)
-    console.log(req.body)
     await cache.set(String(req.query.key), req.body)
     return res.status(200).json("Set!");
-  } catch ({ err }) {
-    console.error(err);
-    return res.sendStatus(500).json(err);
+  } catch (error) {
+    return res.status(500).json({
+      "error": error.message
+    });
   }
 });
 
@@ -53,29 +54,32 @@ app.get('/get', async (req, res) => {
       return res.status(200).json(result);
     };
     return res.status(200).json(null);
-  } catch ({ err }) {
-    console.error(err);
-    return res.sendStatus(500).json(err);
+  } catch (error) {
+    return res.status(500).json({
+      "error": error.message
+    });
   }
 });
 
-// app.get('/has', async (req, res) => {
-//   try {
-//     const result = await cacheService.has(String(req.query.key));
-//     return res.status(200).json(result);
-//   } catch ({ err }) {
-//     console.error(err);
-//     return res.sendStatus(500).json(err);
-//   }
-// });
+app.get('/has', async (req, res) => {
+  try {
+    const result = await cache.has(String(req.query.key));
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      "error": error.message
+    });
+  }
+});
 
 app.get('/flush', async (req, res) => {
   try {
     await cache.flush();
     return res.status(200).json("Flushed!");
-  } catch ({ err }) {
-    console.error(err);
-    return res.sendStatus(500).json(err);
+  } catch (error) {
+    return res.status(500).json({
+      "error": error.message
+    });
   }
 });
 
