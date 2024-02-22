@@ -6,8 +6,8 @@ module.exports = function () {
     const durationToLastDayOfWeek = moment.duration(lastDayOfWeek.diff(moment.now()));
     
     return {
-        startDate: function () { return firstDayOfWeek.toDate(); },
+        startDate: function () { return firstDayOfWeek.format('YYYY-MM-DD') },
         date: function () { return lastDayOfWeek.toDate() },
-        seconds: function () { return Math.round(durationToLastDayOfWeek.asSeconds()); }
+        seconds: function () { return Math.round(durationToLastDayOfWeek.asSeconds()) }
     }
 }();

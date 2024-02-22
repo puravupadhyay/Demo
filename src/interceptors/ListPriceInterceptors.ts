@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ACCESS_TOKEN_CACHE_KEY, LIST_PRICE_CACHE_KEY, } from "../constnats";
-const { refreshAccessToken } = require("../helpers/AuthHelper");
-const expiryTime = require("../helpers/ExpiryTimeHelper");
+import { setNewCache, updateCacheExpiry } from "../cache/CacheHelper";
+const { refreshAccessToken } = require("../auth/AuthHelper");
 const cache = require("../cache/Cache");
 
 const axiosListPricesInstance = axios.create();
@@ -25,21 +25,22 @@ axiosListPricesInstance.interceptors.request.use(
 axiosListPricesInstance.interceptors.response.use(
     async response => {
         console.log("Executing List Price Response Interceptor");
-        // TODO: check data. 
-        // if data is empty 
-        // or if the service does not return a 200 
-            // then use previously cached data but set new expiry
-        // else set the new cache with new expiry  
+        console.log("Url: " + response.config.url);
+        console.log("Received a response status of " + response.status);
 
-        console.log(`Cache will expire on: ${expiryTime.date()} or in ${expiryTime.seconds()} seconds.`)
-        await cache.set(LIST_PRICE_CACHE_KEY, response.data, expiryTime.seconds());
+        if (response.data.data.length == 0) {
+            console.log("Data return 0 results.");
+            await updateCacheExpiry(response.data);
+        }
+        else {
+            setNewCache(response.data);
+        }
         return response;
-
-        // TOOD: log error status and status message
     },
-    error => {
-        Promise.reject(error)
+    async error => {
+        console.log("Url: " + error.config.url);
+        console.log("Received a response status of " + error.response.status + " with response: " + JSON.stringify(error.response.data));
+        await updateCacheExpiry();
     });
 
-module.exports = { axiosListPricesInstance }
-
+module.exports = { axiosListPricesInstance };

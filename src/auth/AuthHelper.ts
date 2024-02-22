@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ACCESS_TOKEN_CACHE_KEY, API_AUTH_ENDPOINT, API_SECRETS_KEY, LIST_PRICE_CACHE_KEY } from "../constnats";
-const { getSecrets } = require("./SecretHelper");
+const { getSecrets } = require("./../secrets/SecretHelper");
 const cache = require("./../cache/Cache");
 
 module.exports = {
@@ -16,12 +16,8 @@ module.exports = {
 
         await axios.post(API_AUTH_ENDPOINT, params)
             .then(async response => {
-                if (response.status === 200) {
-                    await cache.set(ACCESS_TOKEN_CACHE_KEY, response.data, response.data.expires_in);
-                    return response.data;
-                } else {
-                    console.error("service returned status of " + response.status + " with message: " + response.statusText);
-                }
+                await cache.set(ACCESS_TOKEN_CACHE_KEY, response.data, response.data.expires_in);
+                return response.data;
             })
             .catch(error => {
                 throw error;
