@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ACCESS_TOKEN_CACHE_KEY, API_AUTH_ENDPOINT, API_SECRETS_KEY, LIST_PRICE_CACHE_KEY } from "../constnats";
-const { getCache, setCache, hasCache, flushCacheDb } = require("./CacheHelper");
 const { getSecrets } = require("./SecretHelper");
+const cache = require("./../cache/Cache");
 
 module.exports = {
     async refreshAccessToken() {
@@ -16,7 +16,8 @@ module.exports = {
 
         await axios.post(API_AUTH_ENDPOINT, params)
             .then(async response => {
-                await setCache(ACCESS_TOKEN_CACHE_KEY, response.data, response.data.expires_in);
+                console.log(response.data)
+                await cache.set(ACCESS_TOKEN_CACHE_KEY, response.data, response.data.expires_in);
                 return response.data;
             })
             .catch(error => {
